@@ -111,7 +111,7 @@ async function main() {
     body { background: #fff; font-family: 'Libre Baskerville', serif; }
     .imi-map-widget { width: 100%; max-width: 960px; margin: 0 auto; }
     .map-label { font-family: 'Roboto Condensed', sans-serif; font-size: 12px; color: #888; margin-bottom: 6px; letter-spacing: 0.03em; }
-    #imi-map { width: 100%; height: 512px; background: #ffffff; }
+    #imi-map { width: 100%; height: 200px; background: #ffffff; }
     .leaflet-control-attribution { display: none !important; }
     .leaflet-control-zoom { display: none !important; }
     .custom-tooltip { position: absolute; z-index: 9999; background: #fff; border: 1px solid #e4e4e4; box-shadow: 0 4px 16px rgba(0,0,0,0.10); padding: 10px 12px; width: 160px; display: none; pointer-events: none; }
@@ -127,17 +127,17 @@ async function main() {
   <div class="custom-tooltip" id="custom-tooltip"></div>
 </div>
 <script>
-  const OFFICES = \${JSON.stringify(offices, null, 2)};
+  const OFFICES = ${JSON.stringify(offices, null, 2)};
 
   function makeIcon(isHq) {
     const fill = isHq ? "#c71e1d" : "#1d81a2";
     const size = isHq ? 20 : 13;
     return L.divIcon({
       className: "",
-      html: \\\`<svg width="\\\${size}" height="\\\${size}" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      html: \`<svg width="\${size}" height="\${size}" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                <rect x="2" y="2" width="16" height="16" rx="1" transform="rotate(45 10 10)"
-                 fill="\\\${fill}" fill-opacity="0.85" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>
-             </svg>\\\`,
+                 fill="\${fill}" fill-opacity="0.85" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>
+             </svg>\`,
       iconSize: [size, size], iconAnchor: [size/2, size/2], popupAnchor: [0, size]
     });
   }
@@ -162,20 +162,21 @@ async function main() {
         marker.on('click', function(e) {
           L.DomEvent.stopPropagation(e);
           const point = map.latLngToContainerPoint([o.lat, o.lng]);
-          tooltip.innerHTML = \\\`\\\${o.hq ? '<span class="popup-hq">Headquarters</span>' : ''}<div class="popup-city">\\\${o.city}</div><div class="popup-addr">\\\${o.address}</div>\\\`;
+          tooltip.innerHTML = \`\${o.hq ? '<span class="popup-hq">Headquarters</span>' : ''}<div class="popup-city">\${o.city}</div><div class="popup-addr">\${o.address}</div>\`;
           tooltip.style.display = 'block';
           const mapWidth = map.getContainer().offsetWidth;
-          let leftPos = point.x - 80;
-          if (point.x < 100) leftPos = point.x + 10;
-          else if (point.x > mapWidth - 100) leftPos = point.x - 170;
+          const tooltipWidth = 180;
+          let leftPos = point.x - tooltipWidth / 2;
+          if (leftPos < 5) leftPos = 5;
+          if (leftPos + tooltipWidth > mapWidth - 5) leftPos = mapWidth - tooltipWidth - 5;
           tooltip.style.left = leftPos + 'px';
           tooltip.style.top = (point.y + 16) + 'px';
         });
       });
 
-      map.setView([20, 0], 1);
+      map.setView([20, -20], 1);
     });
-  map.setView([20, 0], 1);
+  map.setView([20, -20], 1);
 <\/script>
 </body>
 </html>`;
