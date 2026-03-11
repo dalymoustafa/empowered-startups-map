@@ -111,7 +111,7 @@ async function main() {
     body { background: #fff; font-family: 'Libre Baskerville', serif; }
     .imi-map-widget { width: 100%; max-width: 960px; margin: 0 auto; }
     .map-label { font-family: 'Roboto Condensed', sans-serif; font-size: 12px; color: #888; margin-bottom: 6px; letter-spacing: 0.03em; }
-    #imi-map { width: 100%; height: 380px; background: #ffffff; }
+    #imi-map { width: 100%; height: 260px; background: #ffffff; }
     .leaflet-control-attribution { display: none !important; }
     .leaflet-control-zoom { display: none !important; }
     .custom-tooltip { position: absolute; z-index: 9999; background: #fff; border: 1px solid #e4e4e4; box-shadow: 0 4px 16px rgba(0,0,0,0.10); padding: 10px 12px; width: 160px; display: none; pointer-events: none; }
@@ -165,21 +165,18 @@ async function main() {
           tooltip.innerHTML = \`\${o.hq ? '<span class="popup-hq">Headquarters</span>' : ''}<div class="popup-city">\${o.city}</div><div class="popup-addr">\${o.address}</div>\`;
           tooltip.style.display = 'block';
           const mapWidth = map.getContainer().offsetWidth;
-          let leftPos = point.x - 80;
-          if (point.x < 100) leftPos = point.x + 10;
-          else if (point.x > mapWidth - 100) leftPos = point.x - 170;
+          const tooltipWidth = 180;
+          let leftPos = point.x - tooltipWidth / 2;
+          if (leftPos < 5) leftPos = 5;
+          if (leftPos + tooltipWidth > mapWidth - 5) leftPos = mapWidth - tooltipWidth - 5;
           tooltip.style.left = leftPos + 'px';
           tooltip.style.top = (point.y + 16) + 'px';
         });
       });
 
-      if (OFFICES.length > 1) {
-        map.fitBounds(OFFICES.map(o => [o.lat, o.lng]), { padding: [30, 30], maxZoom: 4 });
-      } else {
-        map.setView([20, -20], 2);
-      }
+      map.setView([20, -20], 1);
     });
-  map.setView([20, -20], 2);
+  map.setView([20, -20], 1);
 <\/script>
 </body>
 </html>`;
